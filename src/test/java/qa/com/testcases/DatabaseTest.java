@@ -36,6 +36,7 @@ public class DatabaseTest {
             // Retrieve count from result set
             if (resultSet.next()) {
                 count = resultSet.getInt("count");
+                System.out.println(count);
             }
         } finally {
             // Close result set and statement

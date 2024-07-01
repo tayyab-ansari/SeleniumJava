@@ -10,7 +10,7 @@ public class ConfigReader {
 
 	public ConfigReader() {
 		properties = new Properties();
-		try (InputStream input = new FileInputStream("C:\\Users\\umair.boota_ventured\\Desktop\\test\\Test\\src\\test\\java\\qa\\com\\config\\config.properties")) {
+		try (InputStream input = new FileInputStream("/Users/tayyab/Desktop/Task2&3/selenium-basic/src/test/java/qa/com/config/config.properties")) {
 			properties.load(input);
 		} catch (IOException ex) {
 			ex.printStackTrace();
@@ -32,6 +32,10 @@ public class ConfigReader {
 	
 	public String getPassword() {
 		return properties.getProperty("password");
+	}
+
+	public String getInvalidPassword() {
+		return properties.getProperty("wrongPassword");
 	}
 	
 	public String getDevice() {

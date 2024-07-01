@@ -4,9 +4,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
-//import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.edge.EdgeDriver;
-
+import org.openqa.selenium.edge.EdgeOptions;
 import qa.com.config.ConfigReader;
 
 import java.awt.*;
@@ -22,52 +21,48 @@ public class WebDriverFactory {
 	static Boolean headless = Boolean.valueOf(configReader.getHeadless());
 
 	public static WebDriver getInstance() throws AWTException {
-		ChromeOptions op = new ChromeOptions();
-		if (device.equals("Windows")) {
-			op.addArguments("--start-maximized");
-		} else {
-			op.addArguments("start-fullscreen");
+		if (driver == null) {
+			String browser = configReader.getBrowser().toLowerCase();
+			switch (browser) {
+				case "chrome":
+					ChromeOptions chromeOptions = new ChromeOptions();
+					if (device.equalsIgnoreCase("windows")) {
+						chromeOptions.addArguments("--start-maximized");
+					} else {
+						chromeOptions.addArguments("start-fullscreen");
+					}
+					if (headless) {
+						chromeOptions.addArguments("--headless");
+					}
+					chromeOptions.addExtensions(new File("chromeappExtension/chromeapp.crx"));
+					System.setProperty("webdriver.chrome.driver",
+							"/Users/tayyab/Desktop/Task2&3/selenium-basic/Driver/chromedriver");
+					driver = new ChromeDriver(chromeOptions);
+					break;
+
+				case "firefox":
+					System.setProperty("webdriver.gecko.driver", "/Users/tayyab/Desktop/Task2&3/selenium-basic/Driver/geckodriver");
+					driver = new FirefoxDriver();
+					break;
+
+				case "edge":
+					EdgeOptions edgeOptions = new EdgeOptions();
+					if (headless) {
+						edgeOptions.addArguments("--headless");
+					}
+					System.setProperty("webdriver.edge.driver",
+							"/Users/tayyab/Desktop/Task2&3/selenium-basic/Driver/msedgedriver");
+					driver = new EdgeDriver(edgeOptions);
+					break;
+
+				default:
+					throw new IllegalArgumentException("Unsupported browser: " + browser);
+			}
+
+			driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
+			String url = configReader.getUrl();
+			driver.get(url);
 		}
-
-		if (headless) {
-			op.addArguments("--headless");
-		}
-
-		op.addExtensions(new File("chromeappExtension/chromeapp.crx"));
-
-		String browser = configReader.getBrowser();
-		switch (browser.toLowerCase()) {
-		case "chrome":
-			System.setProperty("webdriver.chrome.driver",
-					"C:\\Users\\umair.boota_ventured\\Documents\\chromedriver-win64\\chromedriver.exe");
-			driver = new ChromeDriver(op);
-			break;
-
-//		case "ie":
-//			System.setProperty("webdriver.ie.driver",
-//					"C:\\Users\\umair.boota_ventured\\Documents\\IEDriverServer_x64_4.14.0\\IEDriverServer.exe");
-//			driver = new InternetExplorerDriver();
-//			break;
-
-		case "firefox":
-			System.setProperty("webdriver.gecko.driver", "path/to/geckodriver");
-			driver = new FirefoxDriver();
-			break;
-
-		case "edge":
-			System.setProperty("webdriver.edge.driver",
-					"C:\\Users\\umair.boota_ventured\\Documents\\edgedriver_win64\\msedgedriver.exe");
-			driver = new EdgeDriver();
-			break;
-
-		default:
-			throw new IllegalArgumentException("Unsupported browser: " + browser);
-		}
-
-		String url = configReader.getUrl();
-		driver.get(url);
-		driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
-
 		return driver;
 	}
 

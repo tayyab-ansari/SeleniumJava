@@ -37,9 +37,7 @@ public class loginTest {
         loginPage.login(username, password);
 
         // Assert: User lands on the dashboard
-        String expectedTitle = "Swag Labs";
-        String actualTitle = driver.getTitle();
-        Assert.assertEquals(actualTitle, expectedTitle, "Login failed or page title is incorrect");
+        loginPage.verifySuccessfulLogin("Products");
     }
 
     @Test(priority = 2, dependsOnMethods = "loginWithValidCredentials")
@@ -62,8 +60,6 @@ public class loginTest {
         // Assert: Check the number of items in the cart
         int numberOfItemsInCart = dashboardPage.getNumberOfItemsInCart();
         Assert.assertEquals(numberOfItemsInCart, 2, "Number of items in the cart is incorrect");
-
-        // Additional assertions can be added here to check the prices and quantities in the cart
     }
 
     @AfterClass
