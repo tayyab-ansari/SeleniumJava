@@ -7,7 +7,8 @@
 	<test thread-count="5" name="Test">
 		<classes>
 			<class name="qa.com.testcases.loginTest" />
-		<!-- <class name="qa.com.testcases.DatabaseTest" /> -->
+			<class name="qa.com.testcases.InvalidLoginTest" />
+<!--		 	<class name="qa.com.testcases.DatabaseTest" />-->
 
 		</classes>
 	</test> <!--
